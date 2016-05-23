@@ -9,4 +9,4 @@
 - and so on
 
 ## 目前丑陋的原型
-	<img style="margin: 5px" src="https://github.com/fallblank/FBBottomBar/blob/master/screenshot/v0.1-ugly.png" width="281" height="500">
+![](https://github.com/fallblank/FBBottomBar/blob/master/screenshot/v0.1-ugly.png)
