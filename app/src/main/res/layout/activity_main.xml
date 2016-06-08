@@ -20,7 +20,7 @@
             android:text="Hello World!"/>
     </FrameLayout>
 
-    <me.fallblank.fbbottomnavigation.FBBottomBar
+    <me.fallblank.bottombar.FBBottomBar
         android:id="@+id/bottom_bar"
         android:elevation="16dp"
         android:layout_width="match_parent"

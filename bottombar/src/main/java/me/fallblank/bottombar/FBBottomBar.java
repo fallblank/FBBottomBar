@@ -1,16 +1,19 @@
-package me.fallblank.fbbottomnavigation;
+package me.fallblank.bottombar;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 /**
  * Created by fallb on 2016/5/22.
@@ -20,7 +23,7 @@ public class FBBottomBar extends FrameLayout {
     /**
      * 标签数据
      */
-    private FBBaseItem[] mTabs;
+    private ArrayList<FBTab> mTabs;
 
 
     /**
@@ -37,16 +40,19 @@ public class FBBottomBar extends FrameLayout {
 
     public FBBottomBar(Context context) {
         super(context);
+        mTabs = new ArrayList<>();
         init(context);
     }
 
     public FBBottomBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mTabs = new ArrayList<>();
         init(context);
     }
 
     public FBBottomBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mTabs = new ArrayList<>();
         init(context);
     }
 
@@ -62,21 +68,22 @@ public class FBBottomBar extends FrameLayout {
     }
 
     private void initViews() {
-        View bottonBar = View.inflate(getContext(), R.layout.fb_bottom_bar_tab_container, null);
-        mTabContainer = (ViewGroup) bottonBar.findViewById(R.id.fa_tab_container);
-        mBackgroundView = bottonBar.findViewById(R.id.fb_background_view);
-        mBackgroundOverlay = bottonBar.findViewById(R.id.fb_background_overlay);
-        addView(bottonBar);
+        View bottomBar = View.inflate(getContext(), R.layout.fb_bottom_bar_tab_container, null);
+        mTabContainer = (ViewGroup) bottomBar.findViewById(R.id.fa_tab_container);
+        mBackgroundView = bottomBar.findViewById(R.id.fb_background_view);
+        mBackgroundOverlay = bottomBar.findViewById(R.id.fb_background_overlay);
+        addView(bottomBar);
     }
 
 
     /**
+     * 添加标签
+     *
      * @param tabs
      */
     public void addTabs(@NonNull FBTab... tabs) {
-        if (tabs.length > 0) {
-            clearTabs();
-            this.mTabs = tabs;
+        for (FBTab tab : tabs) {
+            mTabs.add(tab);
         }
         updateTabs();
     }
@@ -84,24 +91,26 @@ public class FBBottomBar extends FrameLayout {
     /**
      * 添加新标签时去除原理的数据
      */
-    private void clearTabs() {
+    public void clearTabs() {
         mTabContainer.removeAllViews();
-        mTabs = null;
+        mTabs.clear();
     }
 
     /**
      * 更新标签
      */
     private void updateTabs() {
-        int length = mTabs.length;
+        int length = mTabs.size();
         int currentWidth = FBUtils.dpToPixel(getContext(), mScreenWidth / length);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(currentWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        for (FBBaseItem item : mTabs) {
+        for (FBTab item : mTabs) {
             View view = View.inflate(getContext(), R.layout.fb_bottom_bar_tab, null);
-            ImageView ivIcon = (ImageView) view.findViewById(R.id.fb_tab_icon);
+            final ImageView ivIcon = (ImageView) view.findViewById(R.id.fb_tab_icon);
             ivIcon.setImageDrawable(item.getIcon(getContext()));
             TextView tvTitle = (TextView) view.findViewById(R.id.fb_tab_title);
             tvTitle.setText(item.getTitle(getContext()));
+            if (!item.isShowTitle()) tvTitle.setVisibility(GONE);
+            view.setOnClickListener(item.getListener());
             view.setLayoutParams(params);
             mTabContainer.addView(view);
         }

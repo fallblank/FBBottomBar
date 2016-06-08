@@ -1,4 +1,4 @@
-package me.fallblank.fbbottomnavigation;
+package me.fallblank.bottombar;
 
 import android.content.Context;
 import android.content.res.Resources;
